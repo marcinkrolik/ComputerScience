@@ -189,10 +189,31 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
     clearProb: Maximum clearance probability (a float between 0-1)
     numTrials: number of simulation runs to execute (an integer)
     """
-
+    
     # TODO
-
-
+    steps = 300
+    totalPopulation = [0.0 for i in range(steps)]
+    for trial in range(numTrials):
+        index = 1
+        viruses = [SimpleVirus(maxBirthProb, clearProb) for i in range(numViruses)]
+        patient = Patient(viruses, maxPop)
+        while index <= steps:
+            totalPopulation[index-1] += patient.update()
+            index += 1
+    totalPopulation = [number/numTrials for number in totalPopulation]
+    pylab.plot(range(300), totalPopulation)
+    pylab.title("SimpleVirus simulation")
+    pylab.xlabel("Time Steps")
+    pylab.ylabel("Average Virus Population")
+    pylab.legend()
+    pylab.show()
+             
+numViruses = 100
+maxPop = 1000
+maxBirthProb = 0.1
+clearProb = 0.05
+numTrials = 100
+simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb, numTrials)   
 
 #
 # PROBLEM 4
@@ -412,9 +433,3 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     """
 
     # TODO
-virus = SimpleVirus(1.0, 0.0)
-patient = Patient([virus], 100)
-patient.update()
-#Updating the patient for 100 trials...
-#patient.update implemented incorrectly
-print patient.getTotalPop() #expected to be >= 100; got 1
